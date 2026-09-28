@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RsyncZilla is a modern, open-source Windows SFTP client with a familiar dual-pane interface and rsync-powered transfers." />
+  <meta name="theme-color" content="#0b1020" />
+  <title>RsyncZilla — File transfers, powered by rsync</title>
+
+  <style>
+    :root {
+      --bg: #080b12;
+      --bg-soft: #0d1220;
+      --panel: rgba(255,255,255,.055);
+      --panel-strong: rgba(255,255,255,.08);
+      --line: rgba(255,255,255,.10);
+      --text: #f6f8fb;
+      --muted: #aeb8ca;
+      --blue: #58a6ff;
+      --cyan: #54e0c1;
+      --green: #66d39a;
+      --shadow: 0 24px 80px rgba(0,0,0,.35);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 8%, rgba(88,166,255,.17), transparent 30%),
+        radial-gradient(circle at 88% 4%, rgba(84,224,193,.10), transparent 26%),
+        linear-gradient(180deg, #090d16 0%, #070a11 58%, #080b12 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #071019;
+      font-size: 18px;
+      box-shadow: 0 8px 28px rgba(88,166,255,.22);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: .2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      font-weight: 750;
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #5ba9ff, #6fe2c3);
+      color: #071019;
+      box-shadow: 0 14px 38px rgba(88,166,255,.22);
+    }
+
+    .button-primary:hover {
+      box-shadow: 0 18px 46px rgba(88,166,255,.30);
+    }
+
+    .button-secondary {
+      border-color: var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 82px 0 48px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(111,226,195,.18);
+      border-radius: 999px;
+      background: rgba(84,224,193,.07);
+      color: #bdf3e6;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 84px);
+      line-height: .98;
+      letter-spacing: -.055em;
+      margin: 0 auto;
+      max-width: 920px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #ffffff 0%, #b9d9ff 48%, #8cf0d4 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 26px auto 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2.1vw, 22px);
+      line-height: 1.62;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .microcopy {
+      margin-top: 15px;
+      color: #7f899b;
+      font-size: 13px;
+    }
+
+    .screenshot-wrap {
+      position: relative;
+      margin: 58px auto 0;
+      max-width: 1060px;
+    }
+
+    .screenshot-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 8% 8% -6%;
+      background: linear-gradient(135deg, rgba(88,166,255,.22), rgba(84,224,193,.12));
+      filter: blur(50px);
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    .window {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: #121722;
+      box-shadow: var(--shadow);
+    }
+
+    .window-bar {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 15px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.035);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+    }
+
+    .window img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+    }
+
+    section {
+      padding: 82px 0;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 54px);
+      letter-spacing: -.04em;
+      line-height: 1.05;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+      margin: 16px 0 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      min-height: 205px;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(88,166,255,.10);
+      border: 1px solid rgba(88,166,255,.16);
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: -.02em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15.5px;
+    }
+
+    .why {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .big-card {
+      padding: 34px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(88,166,255,.11), rgba(84,224,193,.05) 58%, rgba(255,255,255,.025));
+    }
+
+    .big-card h3 {
+      font-size: 30px;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .big-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .mini-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .cta {
+      margin: 30px 0 90px;
+      padding: 44px;
+      border: 1px solid rgba(111,226,195,.15);
+      border-radius: 30px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(88,166,255,.15), transparent 50%),
+        rgba(255,255,255,.035);
+    }
+
+    .cta h2 {
+      font-size: clamp(34px, 5vw, 54px);
+      margin: 0;
+      letter-spacing: -.04em;
+    }
+
+    .cta p {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 14px auto 26px;
+      max-width: 660px;
+      line-height: 1.6;
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 0 38px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: #7f899b;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #b7c2d3;
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      .why { grid-template-columns: 1fr; }
+      .hero { padding-top: 54px; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: min(calc(100% - 24px), var(--max)); }
+      .nav-links .nav-link { display: none; }
+      .hero { padding-top: 36px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: unset; }
+      .cta { padding: 32px 22px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav>
+      <a class="brand" href="#">
+        <span class="brand-mark">↕</span>
+        <span>RsyncZilla</span>
+      </a>
+
+      <div class="nav-links">
+        <a class="nav-link" href="#features">Features</a>
+        <a class="nav-link" href="https://github.com/kanowins/RsyncZilla" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="button button-primary" href="https://github.com/kanowins/RsyncZilla/releases" target="_blank" rel="noreferrer">
+          Download
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Free · Open source · Windows</div>
+
+        <h1>
+          Familiar file transfers.<br>
+          <span class="gradient-text">Powered by rsync.</span>
+        </h1>
+
+        <p>
+          RsyncZilla combines a clean, FileZilla-style dual-pane interface with the reliability
+          and efficiency of rsync over SSH. Drag, drop, resume, edit and sync without babysitting
+          your transfers.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://github.com/kanowins/RsyncZilla/releases" target="_blank" rel="noreferrer">
+            Download latest release
+            <span aria-hidden="true">↘</span>
+          </a>
+          <a class="button button-secondary" href="https://github.com/kanowins/RsyncZilla" target="_blank" rel="noreferrer">
+            View source on GitHub
+          </a>
+        </div>
+
+        <div class="microcopy">Installer and portable ZIP available from GitHub Releases.</div>
+
+        <div class="screenshot-wrap">
+          <div class="window">
+            <div class="window-bar" aria-hidden="true">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+            <img
+              src="https://raw.githubusercontent.com/kanowins/RsyncZilla/main/assets/rsynczilla.png"
+              alt="RsyncZilla application interface"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </header>
+
+      <section id="features">
+        <div class="section-title">
+          <h2>The useful parts of FileZilla, with rsync underneath.</h2>
+          <p>
+            Built for people who move files to servers every day and want transfers to be fast,
+            obvious when they fail, and easy to recover.
+          </p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="icon">⇄</div>
+            <h3>Delta transfers</h3>
+            <p>rsync sends new and modified data instead of blindly transferring everything again.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">↻</div>
+            <h3>Resume interrupted work</h3>
+            <p>Large transfers are designed to recover cleanly instead of forcing you back to square one.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">✓</div>
+            <h3>No silent failures</h3>
+            <p>Clear exit codes, failed-transfer history and readable logs make transfer errors hard to miss.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌁</div>
+            <h3>Drag & drop workflow</h3>
+            <p>Move files between local and remote panes, or drag them straight in from Windows Explorer.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌨</div>
+            <h3>SSH terminal built in</h3>
+            <p>Open an authenticated terminal directly in the current remote directory with a shortcut.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">✎</div>
+            <h3>Edit remote files locally</h3>
+            <p>Open a remote file in your editor and automatically upload changes again when you save.</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="why">
+          <div class="big-card">
+            <h3>Made for everyday server work.</h3>
+            <p>
+              The interface stays intentionally familiar: local files on the left, remote files on the right,
+              a transfer queue below. Underneath that simple workflow, RsyncZilla uses portable rsync over SSH
+              for atomic, resumable transfers and real error reporting.
+            </p>
+          </div>
+
+          <div class="stack">
+            <div class="mini-card">
+              <strong>Credentials stay off disk</strong>
+              <span>Saved sites keep connection metadata, while passwords are passed to SSH in memory.</span>
+            </div>
+
+            <div class="mini-card">
+              <strong>Open source, MIT licensed</strong>
+              <span>No account, no paid tier. Inspect the code, build it yourself, or contribute on GitHub.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <h2>Ready to replace a few nervous refreshes?</h2>
+        <p>
+          Grab the Windows installer or portable build from GitHub Releases and start transferring with rsync.
+        </p>
+        <a class="button button-primary" href="https://github.com/kanowins/RsyncZilla/releases" target="_blank" rel="noreferrer">
+          Go to Releases
+          <span aria-hidden="true">→</span>
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <span>RsyncZilla · Free and open-source software</span>
+      <span>
+        <a href="https://github.com/kanowins/RsyncZilla" target="_blank" rel="noreferrer">GitHub</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/kanowins/RsyncZilla/releases" target="_blank" rel="noreferrer">Releases</a>
+      </span>
+    </footer>
+  </div>
+</body>
+</html>
