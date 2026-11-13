@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RsyncZilla is a modern, open-source Windows SFTP client with a familiar dual-pane interface and rsync-powered transfers." />
+  <meta name="description" content="RsyncZilla is a modern, open-source Windows SFTP client with a familiar dual-pane interface, rsync-powered delta transfers, an integrated SSH terminal, and a built-in AI MCP server." />
   <meta name="theme-color" content="#0b1020" />
   <title>RsyncZilla — File transfers, powered by rsync</title>
 
@@ -346,6 +346,101 @@
       line-height: 1.55;
     }
 
+    .mcp-showcase {
+      padding: 38px;
+      border-radius: 28px;
+      border: 1px solid rgba(84,224,193,.22);
+      background:
+        radial-gradient(circle at 85% 15%, rgba(84,224,193,.12), transparent 45%),
+        linear-gradient(145deg, rgba(88,166,255,.10), rgba(13,18,32,.85));
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .mcp-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .mcp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+
+    .mcp-badge.off { color: #94a3b8; border-color: rgba(148,163,184,.25); }
+    .mcp-badge.confirm { color: #bae6fd; background: rgba(56,189,248,.12); border-color: rgba(56,189,248,.35); }
+    .mcp-badge.auto { color: #bbf7d0; background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.35); }
+
+    .mcp-terminal-mock {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: #0b0f17;
+      overflow: hidden;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.4);
+    }
+
+    .mcp-terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #141923;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: #d8dee9;
+      font-size: 12px;
+    }
+
+    .mcp-terminal-body {
+      padding: 16px;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+
+    .mcp-prompt-banner {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #1e2430;
+      border: 1px solid #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 12.5px;
+    }
+
+    .mcp-btn-allow {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #16a34a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .mcp-btn-deny {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #dc2626;
+      color: #fff;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
     .cta {
       margin: 30px 0 90px;
       padding: 44px;
@@ -390,6 +485,7 @@
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr 1fr; }
       .why { grid-template-columns: 1fr; }
+      .mcp-showcase { grid-template-columns: 1fr; padding: 26px; }
       .hero { padding-top: 54px; }
     }
 
@@ -414,6 +510,7 @@
 
       <div class="nav-links">
         <a class="nav-link" href="#features">Features</a>
+        <a class="nav-link" href="#ai-mcp">AI MCP</a>
         <a class="nav-link" href="https://github.com/kanowins/RsyncZilla" target="_blank" rel="noreferrer">GitHub</a>
         <a class="button button-primary" href="https://github.com/kanowins/RsyncZilla/releases" target="_blank" rel="noreferrer">
           Download
@@ -433,8 +530,8 @@
 
         <p>
           RsyncZilla combines a clean, FileZilla-style dual-pane interface with the reliability
-          and efficiency of rsync over SSH. Drag, drop, resume, edit and sync without babysitting
-          your transfers.
+          and efficiency of rsync over SSH, an integrated terminal, and a built-in AI MCP server.
+          Drag, drop, resume, edit and sync without babysitting your transfers.
         </p>
 
         <div class="hero-actions">
@@ -508,6 +605,49 @@
         </div>
       </section>
 
+      <section id="ai-mcp">
+        <div class="mcp-showcase">
+          <div>
+            <div class="eyebrow" style="margin-bottom: 14px;">New in v1.7 · Model Context Protocol</div>
+            <h2 style="margin: 0 0 14px; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.035em; line-height: 1.08;">
+              Let your AI assistant control the terminal—on your terms.
+            </h2>
+            <p style="color: var(--muted); font-size: 16.5px; line-height: 1.65; margin: 0;">
+              RsyncZilla includes a built-in <strong>MCP Server</strong> for <strong>Claude, ChatGPT, Antigravity, Cursor, and Windsurf</strong>.
+              Every terminal tab is labeled <code>(MCP1)</code>, <code>(MCP2)</code>, etc. so you can tell the model which server to inspect,
+              while watching every command stream live in your terminal without ever exposing your SSH passwords.
+            </p>
+
+            <div class="mcp-badges">
+              <span class="mcp-badge off">🔒 AI: Off (Default)</span>
+              <span class="mcp-badge confirm">🛡️ AI: Confirm (Read + Ask)</span>
+              <span class="mcp-badge auto">⚡ AI: Auto (Full Control)</span>
+            </div>
+          </div>
+
+          <div class="mcp-terminal-mock">
+            <div class="mcp-terminal-header">
+              <span>🟢 root@prod-web:22 <strong>(MCP1)</strong></span>
+              <span style="color: #38bdf8; font-weight: 700;">🛡️ AI: Confirm</span>
+            </div>
+            <div class="mcp-terminal-body">
+              <div style="color: #c084fc;">[🤖 AI MCP1] 📖 Reading remote file: /etc/nginx/nginx.conf</div>
+              <div style="color: #94a3b8; margin-top: 4px;">root@prod-web:/var/www# <span style="color: #f8fafc;">nginx -t &amp;&amp; systemctl reload nginx</span></div>
+              <div class="mcp-prompt-banner">
+                <div>
+                  <div style="color: #fbbf24; font-weight: 700; margin-bottom: 2px;">🛡️ AI wants to execute command:</div>
+                  <code style="color: #f8fafc; font-size: 11.5px;">nginx -t &amp;&amp; systemctl reload nginx</code>
+                </div>
+                <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                  <span class="mcp-btn-allow">✅ Allow</span>
+                  <span class="mcp-btn-deny">❌ Deny</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section>
         <div class="why">
           <div class="big-card">
@@ -521,8 +661,8 @@
 
           <div class="stack">
             <div class="mini-card">
-              <strong>Credentials stay off disk</strong>
-              <span>Saved sites keep connection metadata, while passwords are passed to SSH in memory.</span>
+              <strong>AES-256-GCM Encrypted Vault</strong>
+              <span>Protect saved passwords with a Master Password using AES-256-GCM &amp; PBKDF2, or keep credentials strictly in RAM.</span>
             </div>
 
             <div class="mini-card">
